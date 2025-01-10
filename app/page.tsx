@@ -21,12 +21,12 @@ export default function Home() {
         body: JSON.stringify({ prompt }),
       });
 
-      const data = await response.json();
-
-      if (response.ok && data.audioUrl) {
-        setAudioPath(data.audioUrl);
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        setAudioPath(url);
       } else {
-        alert(data.error || `Failed to generate audio (Status: ${response.status})`);
+        alert(`Failed to generate audio (Status: ${response.status})`);
       }
     } catch (error) {
       console.log(error)
