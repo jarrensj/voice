@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { writeFileSync } from "node:fs";
+import { writeFileSync, mkdirSync, existsSync } from "node:fs";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
@@ -20,7 +20,13 @@ export async function POST(request: Request) {
     
     const timestamp = Date.now();
     const filename = `audio-${timestamp}.mp3`;
-    const filepath = `public/audio/${filename}`;
+    const audioDir = 'public/audio';
+    const filepath = `${audioDir}/${filename}`;
+    
+    // create audio directory if doesn't exist
+    if (!existsSync(audioDir)) {
+      mkdirSync(audioDir, { recursive: true });
+    }
     
     writeFileSync(filepath, buffer);
     
